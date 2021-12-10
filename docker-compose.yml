@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    command: tini -g -- start-notebook.sh
+    restart: unless-stopped
+    volumes:
+      - .:/code
+      - drive-shared:/code/network/drives/shared
+    ports:
+      - "8888:8888"
+
+volumes:
+  drive-shared:
+    driver: local
+    driver_opts:
+      type: cifs
+      device: "//FAKE/NETWORK/PATH"
+      o: user=$NETWORK_USER,password=$NETWORK_PASSWORD
